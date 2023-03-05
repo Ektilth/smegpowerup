@@ -1,0 +1,179 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><title>Widget Engine</title>
+    <style>
+    body {
+    -ms-overflow-style: none;
+    height: 434px;
+    margin: 46px 0 0 0;
+    position:relative;
+    /*background-image: url("SMEGbackground.jpg");
+    background:#000000;
+    font-family: 'Gill Sans PSA', arial, sans-serif;
+    font-size: 14px;*/
+	background:#000000;
+        color:#FFFFFF;
+    }
+    a{
+        color:#FF0;
+    }
+    
+    #infos {
+        position: absolute;
+        left: 100px;
+        top: 0;
+        width: 600px;
+    }
+    
+    #infos .bloc {
+        float: left;
+        width: 136px;
+        height: 94px;
+        margin: 0 0 1px 1px;
+        border: 1px white solid;
+        padding: 18px 5px;
+        text-align: center;
+        border-radius: 10px;
+        margin: 0px 10px;
+        margin-bottom: 5px;
+    }
+    
+    #infos .bloc .valeur {
+        font-size: 300%;
+        padding-top: 10px;
+        color: white;
+    }
+    
+    #infos .bloc.small {
+        float: left;
+        width: 136px;
+        height: 45px;
+        margin: 0 0 1px 1px;
+        border: 1px white solid;
+        padding: 10px 5px;
+        text-align: center;
+    }
+    #infos .bloc.small .titre {
+        padding-bottom: 5px;
+    }
+    #infos .bloc.small .valeur {
+        font-size: 150%;
+        padding-top: 5px;
+        color: white;
+        display:inline;
+    }
+    #infos .bloc.small .unite {
+        font-size: 150%;
+        padding-left: 5px;
+        display:inline;
+    }
+    
+    #infos .bloc.small.nav-button-container {
+        width: 34px;
+        height: 246px;
+        word-wrap: break-word;
+    }
+
+    .titre.button {
+        position: relative;
+        top: 35%;
+    }
+
+    #infos .listitem {
+        float: left;
+        width: 450px;
+        height: auto;
+        margin: 0 0 1px 1px;
+        border: 1px white solid;
+        padding: 18px 5px;
+        text-align: center;
+        border-radius: 10px;
+        margin: 0px 10px;
+        margin-bottom: 20px;
+        margin-left: 15px;
+        word-break: break-all;
+    }
+    
+    </style>
+    </head>
+    <body>
+    <div id="infos">
+        <div>
+            <div style="float: right; margin: 5px 20px 0 0" id="obd2-status"></div>
+            <h2 style="margin: 5px 0">SMEG PowerUp! v0.1</h2>
+        </div>
+        <br style="clear:both"/>
+        <div style="float: left; width:696px">
+
+            <div class="listitem"><div class="titre">User Agent<div id="userAgent" class="valeur"></div></div></div>
+
+            <div class="listitem"><div class="titre">VIN</div><div id="vin" class="valeur"></div></div>
+            <div class="listitem"><div class="titre">Driving State</div><div id="driving-state" class="valeur"></div></div>
+            <div class="listitem"><div class="titre">Fuel Type</div><div id="fuel-type" class="valeur"></div></div>
+            <div class="listitem"><div class="titre">Speed</div><div id="speed" class="valeur"></div></div>
+            <div class="listitem"><div class="titre">Mileage</div><div id="mileage" class="valeur"></div></div>
+            <div class="listitem"><div class="titre">Autonomy</div><div id="autonomy" class="valeur"></div></div>
+            <div class="listitem"><div class="titre">Offset UTC</div><div id="offset-utc" class="valeur"></div></div>
+
+            <div class="listitem"><div class="titre">Software Release</div><div id="software-release" class="valeur"></div></div>
+            <div class="listitem"><div class="titre">Hardware Release</div><div id="hardware-release" class="valeur"></div></div>
+            <div class="listitem"><div class="titre">Supplier Id</div><div id="supplier-id" class="valeur"></div></div>
+            <div class="listitem"><div class="titre">Map Version</div><div id="map-version" class="valeur"></div></div>
+
+            <div class="listitem"><div class="titre">Current Altitude</div><div id="altitude" class="valeur"></div></div>
+            <div class="listitem"><div class="titre">Current Latitude</div><div id="latitude" class="valeur"></div></div>
+            <div class="listitem"><div class="titre">Current Longitude</div><div id="longitude" class="valeur"></div></div>
+            <div class="listitem"><div class="titre">Current Street</div><div id="street" class="valeur"></div></div>
+            <div class="listitem"><div class="titre">Current Town</div><div id="town" class="valeur"></div></div>
+            <div class="listitem"><div class="titre">Current Country</div><div id="country" class="valeur"></div></div>
+
+            <div class="listitem"><div class="titre">TOP String:</div><div id="topString" class="valeur"></div></div>
+            
+            <br style="clear:both"/>
+        </div>
+        <div>
+        </div>
+    </div>
+    <div style="position:absolute;right:56px;top:330px"><a href="index.html" onclick="document.body.style.marginTop='-1000px'"><img src="back.png" style="width:74px"/></a></div>
+    </body>
+    <script>
+    (function(){
+            var D = document, P = /complete|loaded|interactive/,
+            onready = function(a) {
+                P.test(D.readyState) ? a() : D.addEventListener("DOMContentLoaded", function () {
+                    a()
+                }, !1);
+            },
+
+            updateValues = function() {
+                document.getElementById("driving-state").innerHTML = top.GetCar.DrivingState();
+                document.getElementById("speed").innerHTML = top.GetCar.Speed();
+                document.getElementById("mileage").innerHTML = top.GetCar.Mileage();
+                document.getElementById("autonomy").innerHTML = top.GetCar.Autonomy();
+                document.getElementById("offset-utc").innerHTML = top.GetCar.OffsetUTC();
+
+                document.getElementById("altitude").innerHTML = top.GetCurrentPosition.Altitude();
+                document.getElementById("latitude").innerHTML = top.GetCurrentPosition.Latitude();
+                document.getElementById("longitude").innerHTML = top.GetCurrentPosition.Longitude();
+                document.getElementById("street").innerHTML = top.GetCurrentPosition.Street();
+                document.getElementById("town").innerHTML = top.GetCurrentPosition.Town();
+                document.getElementById("country").innerHTML = top.GetCurrentPosition.Country();
+            },
+
+            mainFunction = function() {
+                document.getElementById("userAgent").innerHTML = window.navigator.userAgent;
+
+                document.getElementById("vin").innerHTML = top.GetCar.VIN();
+                document.getElementById("fuel-type").innerHTML = top.GetCar.FuelType();
+
+                document.getElementById("software-release").innerHTML = top.GetDevice.SoftwareRelease();
+                document.getElementById("hardware-release").innerHTML = top.GetDevice.HardwareRelease();
+                document.getElementById("supplier-id").innerHTML = top.GetDevice.SupplierId();
+                document.getElementById("map-version").innerHTML = top.GetDevice.MapVersion();
+
+                setInterval(updateValues, 1000);
+            }
+
+            onready(mainFunction);
+            
+    })();
+    </script>
+    </html>

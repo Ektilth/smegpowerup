@@ -1,0 +1,109 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><title>Widget Engine</title>
+    <style>
+    body {
+    -ms-overflow-style: none;
+    height: 434px;
+    margin: 46px 0 0 0;
+    position:relative;
+    font-family: 'Gill Sans PSA', arial, sans-serif;
+    /*background-image: url("SMEGbackground.jpg");
+    background:#000000;
+    font-family: 'Gill Sans PSA', arial, sans-serif;
+    font-size: 14px;*/
+	background:#000000;
+        color:#FFFFFF;
+    }
+    #infos {
+        position: absolute;
+        left: 100px;
+        top: 0;
+        width: 600px;
+    }
+    #infos .bloc {
+        float: left;
+        width: 136px;
+        height: 94px;
+        margin: 0 0 1px 1px;
+        border: 1px white solid;
+        padding: 18px 5px;
+        text-align: center;
+        border-radius: 10px;
+        margin: 0px 10px;
+        margin-bottom: 5px;
+    }
+    
+    #infos .bloc .valeur {
+        font-size: 200%;
+        padding-top: 10px;
+        color: white;
+    }
+    
+    #infos .bloc.small {
+        float: left;
+        width: 136px;
+        height: 45px;
+        margin: 0 0 1px 1px;
+        border: 1px white solid;
+        padding: 10px 5px;
+        text-align: center;
+    }
+    #infos .bloc.small .titre {
+        padding-bottom: 5px;
+    }
+    #infos .bloc.small .valeur {
+        font-size: 150%;
+        padding-top: 5px;
+        color: white;
+        display:inline;
+    }
+    #infos .bloc.small .unite {
+        font-size: 150%;
+        padding-left: 5px;
+        display:inline;
+    }
+    
+    #infos .bloc.small.nav-button-container {
+        width: 34px;
+        height: 246px;
+        word-wrap: break-word;
+    }
+
+    #infos .bloc.small.bottom {
+        margin-top: 90px;
+    }
+
+    #infos .bloc.small.lgtext {
+        font-size:140%;
+        font-weight: bold;
+    }
+
+    </style>
+    </head>
+    <div id="infos">
+        <div>
+            <div style="float: right; margin: 5px 20px 0 0" id="obd2-status"></div>
+            <h2 style="margin: 5px 0">Adblue Fill</h2>
+        </div>
+        <div style="float: left; width:696px; border: 1px solid white">
+            <div style="margin-left: 57px;" class="bloc small lgtext" onclick="addMileage(100)">+ 100 km</div>
+            <div class="bloc small lgtext" onclick="addMileage(10)">+ 10 km</div>
+            <div class="bloc small lgtext" onclick="addMileage(1)">+ 1 km</div>
+            <div style="position: absolute; top: 130px; width: 90%; text-align: center; background: red; font-size: 250%;" id="mileagevalue">260254</div>
+            <div style="margin-left: 57px;" class="bloc small bottom lgtext" onclick="addMileage(-100)"> - 100 km</div>
+            <div class="bloc small bottom lgtext" onclick="addMileage(-10)"> - 10 km</div>
+            <div class="bloc small bottom lgtext" onclick="addMileage(-1)"> - 1 km</div>
+
+            <div style="margin-left: 57px;" class="bloc small lgtext" onclick="addLiters(1)"> + 1L</div>
+            <div class="bloc small lgtext" onclick="addLiters(0.1)"> + 0.1L</div>
+            <div style="left: -100px;" class="bloc small bottom lgtext" onclick="addLiters(1)"> + 1L</div>
+        </div>
+    <div style="position:absolute;right:56px;top:330px"><a href="index.html" onclick="document.body.style.marginTop='-1000px'"><img src="back.png" style="width:74px"/></a></div>
+    </body>
+    <script>
+        function addMileage(toAdd) {
+            console.log("Mileage add");
+            var mileageValue = document.getElementById("mileagevalue");
+            mileageValue.innerHTML = parseInt(mileageValue.innerHTML) + toAdd;
+        }
+    </script>
+    </html>

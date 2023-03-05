@@ -1,0 +1,158 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><title>Widget Engine</title>
+    <style>
+    body {
+    -ms-overflow-style: none;
+    height: 434px;
+    margin: 46px 0 0 0;
+    position:relative;
+    /*background-image: url("SMEGbackground.jpg");
+    background:#000000;
+        font-family: 'Gill Sans PSA', arial, sans-serif;
+        font-size: 14px;*/
+	background:#000000;
+        color:#FFFFFF;
+    }
+    a{
+        color:#FF0;
+    }
+    
+    #infos {
+        position: absolute;
+        left: 100px;
+        top: 0;
+        width: 600px;
+    }
+    
+    #infos .bloc {
+        float: left;
+        width: 136px;
+        height: 94px;
+        margin: 0 0 1px 1px;
+        border: 1px white solid;
+        padding: 18px 5px;
+        text-align: center;
+        border-radius: 10px;
+        margin: 0px 10px;
+        margin-bottom: 5px;
+    }
+    
+    #infos .bloc .valeur {
+        font-size: 200%;
+        padding-top: 10px;
+        color: white;
+    }
+    
+    #infos .bloc.small {
+        float: left;
+        width: 136px;
+        height: 45px;
+        margin: 0 0 1px 1px;
+        border: 1px white solid;
+        padding: 10px 5px;
+        text-align: center;
+    }
+    #infos .bloc.small .titre {
+        padding-bottom: 5px;
+    }
+    #infos .bloc.small .valeur {
+        font-size: 150%;
+        padding-top: 5px;
+        color: white;
+        display:inline;
+    }
+    #infos .bloc.small .unite {
+        font-size: 150%;
+        padding-left: 5px;
+        display:inline;
+    }
+    
+    #infos .bloc.small.nav-button-container {
+        width: 34px;
+        height: 246px;
+        word-wrap: break-word;
+    }
+
+    .titre.button {
+        position: relative;
+        top: 35%;
+    }
+    
+    </style>
+    </head>
+    <body>
+    <div id="infos">
+        <div>
+            <div style="float: right; margin: 5px 20px 0 0" id="obd2-status"></div>
+            <h2 style="margin: 5px 0">SMEG PowerUp! v0.1</h2>
+        </div>
+        <br style="clear:both"/>
+        <div style="float: left; width:696px">
+
+            <div style="margin-left: 57px;" class="bloc" id="bloc-screenmirror"><a href="screenmirror.php"><img src="mirror_phone.png"></a></div>
+            <div class="bloc" id="bloc-property-list"><a href="list.html"><img src="code.png"></a></div>
+
+            <div class="bloc" id="bloc-configuration"><a href="config.html"><img src="sliders.png"></a></div>
+            
+            <div style="margin-left: 57px;" class="bloc" id="bloc-configuration"><a href="adblue-fill.html"><img src="adblue.png"></a></div>
+            <div class="bloc" id="bloc-mileage"><div class="titre">Mileage</div><div id="mileage-val" class="valeur" style="font-size: 165%"></div><div class="unite">km</div></div>
+            <div class="bloc" id="bloc-autonomy"><div class="titre">Autonomy</div><div id="autonomy-val" class="valeur"></div><div class="unite">km</div></div>
+            
+            <br style="clear:both"/>
+
+            <div style="border: 1px solid #FFFFFF; background-color: black; height: 50px; width: 86%">
+                <div id="adblue-level" style="height:50px; width: 50%; background-color: #246db0; text-align: center; font-size: 40px; white-space: nowrap;">?L / 17L</div>
+            </div>
+        </div>
+        <div>
+        </div>
+    </div>
+    </body>
+    <script>
+    (function(){
+        
+            var D = document, P = /complete|loaded|interactive/,
+            onready = function(a) {
+                P.test(D.readyState) ? a() : D.addEventListener("DOMContentLoaded", function () {
+                    a()
+                }, !1);
+            },
+
+            updateAdblue = function() {
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function(event) {
+                    if (this.readyState === 4) { // XMLHttpRequest.DONE === 4
+                        if (this.status === 200) {
+                            var resp = this.responseText;
+                            console.log("response: " + resp);
+                            if(typeof resp.error == "undefined") {
+                                var remaining = resp.toString();
+                                var adblueLevelElement = document.getElementById("adblue-level");
+                                adblueLevelElement.innerHTML = remaining + "L / 17L";
+                                adblueLevelElement.style.width = (parseFloat(remaining)/17)*100 + "%";
+                            }
+                        }
+                    }
+                };
+                xhr.open('GET', 'write_sd.php?type=adblue&mileage=' + top.GetCar.Mileage(), true);
+                xhr.send(null);
+            },
+
+            updateValues = function() {
+                document.getElementById("autonomy-val").innerHTML = top.GetCar.Autonomy();
+                document.getElementById("mileage-val").innerHTML = top.GetCar.Mileage();
+                
+            },
+
+            mainFunction = function() {
+                setInterval(updateValues, 1000);
+                setInterval(updateAdblue, 5000);
+            }
+
+            onready(mainFunction);
+
+            updateAdblue();
+            
+            
+    })();
+    </script>
+    </html>
