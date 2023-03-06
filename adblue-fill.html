@@ -5,7 +5,6 @@
     height: 434px;
     margin: 46px 0 0 0;
     position:relative;
-    font-family: 'Gill Sans PSA', arial, sans-serif;
     /*background-image: url("SMEGbackground.jpg");
     background:#000000;
     font-family: 'Gill Sans PSA', arial, sans-serif;
@@ -27,7 +26,6 @@
         border: 1px white solid;
         padding: 18px 5px;
         text-align: center;
-        border-radius: 10px;
         margin: 0px 10px;
         margin-bottom: 5px;
     }
@@ -77,33 +75,177 @@
         font-weight: bold;
     }
 
+    #infos .listitem {
+        float: left;
+        width: 400px;
+        height: auto;
+        margin: 0 0 1px 1px;
+        border: 1px white solid;
+        padding: 18px 5px;
+        text-align: center;
+        margin: 0px 10px;
+        margin-bottom: 20px;
+        margin-left: 15px;
+        word-break: break-all;
+    }
+
     </style>
     </head>
+    <body>
+    <div style="position:absolute;left:18px;top:34px"><a href="index.html" onclick="document.body.style.marginTop='-1000px'"><img src="back.png" style="width:74px"/></a></div>
     <div id="infos">
+        
         <div>
             <div style="float: right; margin: 5px 20px 0 0" id="obd2-status"></div>
             <h2 style="margin: 5px 0">Adblue Fill</h2>
         </div>
         <div style="float: left; width:696px; border: 1px solid white">
-            <div style="margin-left: 57px;" class="bloc small lgtext" onclick="addMileage(100)">+ 100 km</div>
-            <div class="bloc small lgtext" onclick="addMileage(10)">+ 10 km</div>
-            <div class="bloc small lgtext" onclick="addMileage(1)">+ 1 km</div>
-            <div style="position: absolute; top: 130px; width: 90%; text-align: center; background: red; font-size: 250%;" id="mileagevalue">260254</div>
-            <div style="margin-left: 57px;" class="bloc small bottom lgtext" onclick="addMileage(-100)"> - 100 km</div>
-            <div class="bloc small bottom lgtext" onclick="addMileage(-10)"> - 10 km</div>
-            <div class="bloc small bottom lgtext" onclick="addMileage(-1)"> - 1 km</div>
+            <div style="margin-left: 57px;" class="bloc small lgtext" onclick="addButton(3)" id="btn-tl">+ 100 km</div>
+            <div class="bloc small lgtext" onclick="addButton(2)" id="btn-tc">+ 10 km</div>
+            <div class="bloc small lgtext" onclick="addButton(1)" id="btn-tr">+ 1 km</div>
+            <div style="position: absolute; top: 130px; width: 90%; text-align: center; font-size: 250%;" id="fillvalue">0km / 0.00L</div>
+            <div style="margin-left: 57px;" class="bloc small bottom lgtext" onclick="addButton(-3)" id="btn-bl"> - 100 km</div>
+            <div class="bloc small bottom lgtext" onclick="addButton(-2)" id="btn-bc"> - 10 km</div>
+            <div class="bloc small bottom lgtext" onclick="addButton(-1)" id="btn-br"> - 1 km</div>
 
-            <div style="margin-left: 57px;" class="bloc small lgtext" onclick="addLiters(1)"> + 1L</div>
-            <div class="bloc small lgtext" onclick="addLiters(0.1)"> + 0.1L</div>
-            <div style="left: -100px;" class="bloc small bottom lgtext" onclick="addLiters(1)"> + 1L</div>
+            <div style="margin-left: 57px;" class="bloc small lgtext" onclick="switchUnit()" id="btn-unit">KM - L</div>
+            <div class="bloc small lgtext" onclick="sendFill()">SEND</div>
+            <div style="margin-top: 20px;" class="listitem"><div class="titre">Fills:</div><div id="fills" class="valeur"></div></div>
         </div>
-    <div style="position:absolute;right:56px;top:330px"><a href="index.html" onclick="document.body.style.marginTop='-1000px'"><img src="back.png" style="width:74px"/></a></div>
+    
     </body>
     <script>
-        function addMileage(toAdd) {
-            console.log("Mileage add");
-            var mileageValue = document.getElementById("mileagevalue");
-            mileageValue.innerHTML = parseInt(mileageValue.innerHTML) + toAdd;
+        var mileageDisplay = true;
+        function switchUnit() {
+            buttonColor(0);
+            mileageDisplay = !mileageDisplay;
+            if(mileageDisplay) {
+                document.getElementById("btn-tl").innerHTML = "+ 100 km";
+                document.getElementById("btn-tc").innerHTML = "+ 10 km";
+                document.getElementById("btn-tr").innerHTML = "+ 1 km";
+                document.getElementById("btn-bl").innerHTML = "- 100 km";
+                document.getElementById("btn-bc").innerHTML = "- 10 km";
+                document.getElementById("btn-br").innerHTML = "- 1 km";
+            } else {
+                document.getElementById("btn-tl").innerHTML = "+ 1 L";
+                document.getElementById("btn-tc").innerHTML = "+ 0.1 L";
+                document.getElementById("btn-tr").innerHTML = "+ 0.01 L";
+                document.getElementById("btn-bl").innerHTML = "- 1 L";
+                document.getElementById("btn-bc").innerHTML = "- 0.1 L";
+                document.getElementById("btn-br").innerHTML = "- 0.01 L";
+            }
         }
+        function buttonColor(buttonValue) {
+            var buttonElement;
+            switch(buttonValue) {
+                    case 3:
+                        buttonElement = document.getElementById("btn-tl");
+                        break;
+                    case 2:
+                        buttonElement = document.getElementById("btn-tc");
+                        break;
+                    case 1:
+                        buttonElement = document.getElementById("btn-tr");
+                        break;
+                    case 0:
+                        buttonElement = document.getElementById("btn-unit");
+                        break;
+                    case -1:
+                        buttonElement = document.getElementById("btn-br");
+                        break;
+                    case -2:
+                        buttonElement = document.getElementById("btn-bc");
+                        break;
+                    case -3:
+                        buttonElement = document.getElementById("btn-bl");
+                        break;
+                }
+            buttonElement.style.backgroundColor = "#159dc3";
+            setTimeout(function() {
+                buttonElement.style.backgroundColor = "black";
+            }, 150);
+        }
+        function addButton(buttonValue) {
+            buttonColor(buttonValue);
+            var fillValue = document.getElementById("fillvalue");
+            var mileageValue = parseInt(fillValue.innerHTML.split("km / ")[0]);
+            var adblueValue = parseFloat(fillValue.innerHTML.split("km / ")[1].split("L")[0]);
+            if(mileageDisplay) {
+                switch(buttonValue) {
+                    case 3:
+                        mileageValue += 100;
+                        break;
+                    case 2:
+                        mileageValue += 10;
+                        break;
+                    case 1:
+                        mileageValue += 1;
+                        break;
+                    case -1:
+                        mileageValue -= 1;
+                        break;
+                    case -2:
+                        mileageValue -= 10;
+                        break;
+                    case -3:
+                        mileageValue -= 100;
+                        break;
+                }
+            } else {
+                switch(buttonValue) {
+                    case 3:
+                        adblueValue += 1;
+                        break;
+                    case 2:
+                        adblueValue += 0.1;
+                        break;
+                    case 1:
+                        adblueValue += 0.01;
+                        break;
+                    case -1:
+                        adblueValue -= 0.01;
+                        break;
+                    case -2:
+                        adblueValue -= 0.1;
+                        break;
+                    case -3:
+                        adblueValue -= 1;
+                        break;
+                }
+                if(adblueValue < 0) {
+                    adblueValue = 0;
+                }
+                if(adblueValue > 17) {
+                    adblueValue = 17;
+                }
+            }
+            fillValue.innerHTML = mileageValue + "km / " + adblueValue.toFixed(2) + "L";
+        }
+        function sendFill() {
+            var fillValue = document.getElementById("fillvalue");
+            var mileageValue = fillValue.innerHTML.split("km / ")[0];
+            var adblueValue = parseFloat(fillValue.innerHTML.split("km / ")[1].split("L")[0]);
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', 'write_sd.php?type=adblue', true);
+            xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+            xhr.send('mileage=' + mileageValue.toString() + "&liters=" + adblueValue.toString());
+        }
+
+        (function(){
+        var D = document, P = /complete|loaded|interactive/,
+        onready = function(a) {
+            P.test(D.readyState) ? a() : D.addEventListener("DOMContentLoaded", function () {
+                a()
+            }, !1);
+        },
+
+        mainFunction = function() {
+            var fillValue = document.getElementById("fillvalue");
+            var adblueValue = fillValue.innerHTML.split("km / ")[1].split("L")[0];
+            fillValue.innerHTML = top.GetCar.Mileage() + "km / " + adblueValue.toFixed(2) + "L";
+        }
+        
+        onready(mainFunction);
+        })();
     </script>
     </html>
