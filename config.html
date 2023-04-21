@@ -5,10 +5,6 @@
     height: 434px;
     margin: 46px 0 0 0;
     position:relative;
-    /*background-image: url("SMEGbackground.jpg");
-    background:#000000;
-    font-family: 'Gill Sans PSA', arial, sans-serif;
-    font-size: 14px;*/
 	background:#000000;
         color:#FFFFFF;
     }
@@ -18,9 +14,95 @@
         top: 0;
         width: 600px;
     }
+
+    #infos .listitem {
+        float: left;
+        width: 400px;
+        height: auto;
+        margin: 0 0 1px 1px;
+        border: 1px white solid;
+        padding: 18px 5px;
+        text-align: center;
+        margin: 0px 10px;
+        margin-bottom: 10px;
+        margin-left: 15px;
+        word-break: break-all;
+    }
+
+    .listitem .title {
+        font-size: 150%;
+    }
     </style>
     </head>
     <body>
+        <div id="infos">
+            <div>
+                <div style="float: right; margin: 5px 20px 0 0"></div>
+                <h2 style="margin: 5px 0">Configuration</h2>
+            </div>
+            <div style="float: left; width:696px;">
+                <div style="margin-top: 20px;" class="listitem" onclick="reconnectWifi()"><div class="title">WiFi</div><div class="valeur" id="wifi_ssid">Not connected!</div></div>
+            </div>
+            <div style="float: left; width:696px;">
+                <div style="margin-top: 20px;" class="listitem" onclick="rebootDongle()"><div class="title">Reboot Dongle</div><div class="valeur" id="reboot_value"></div></div>
+            </div>
+            <div style="float: left; width:696px;">
+                <div style="margin-top: 20px;" class="listitem" onclick="poweroffDongle()"><div class="title">Power Off Dongle</div><div class="valeur" id="poweroff_value"></div></div>
+            </div>
+        </div>
     <div style="position:absolute;left:18px;top:34px"><a href="index.html" onclick="document.body.style.marginTop='-1000px'"><img src="back.png" style="width:74px"/></a></div>
     </body>
+    <script>
+        function reconnectWifi() {
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', 'backend/config.php?type=wifi', true);
+            document.getElementById("wifi_ssid").innerHTML = "Reconnecting...";
+            xhr.send();
+        }
+
+        function getWifiStatus() {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function(event) {
+                if (this.readyState === 4) {
+                    if (this.status === 200) {
+                        var resp = this.responseText.toString();
+                        document.getElementById("wifi_ssid").innerHTML = resp;
+                    }
+                }
+            }
+            xhr.open('GET', 'backend/config.php?type=wifi', true);
+            xhr.send();
+        }
+
+        function rebootDongle() {
+            document.getElementById("reboot_value").innerHTML = "Rebooting...";
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', 'backend/config.php?type=reboot', true);
+            xhr.send();
+        }
+
+        function poweroffDongle() {
+            document.getElementById("poweroff_value").innerHTML = "Powering Off...";
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', 'backend/config.php?type=poweroff', true);
+            xhr.send();
+        }
+
+        (function(){
+        var D = document, P = /complete|loaded|interactive/,
+        onready = function(a) {
+            P.test(D.readyState) ? a() : D.addEventListener("DOMContentLoaded", function () {
+                a()
+            }, !1);
+        },
+
+        mainFunction = function() {
+            getWifiStatus();
+            setInterval(getWifiStatus, 2000);
+        }
+
+        onready(mainFunction);
+
+        })();
+    </script>
     </html>

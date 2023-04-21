@@ -38,6 +38,11 @@ switch($_GET["part"]) {
         $height = floor($height/13); //60
         $width -= floor($width/1.69); //210
         break;
+    case "batt":
+        $height = floor($height/25);
+        $x = floor($width/1.14);
+        $width = $width/11;
+        break;
 }
 $im2 = imagecrop($im, ['x' => $x, 'y' => $y, 'width' => $width, 'height' => $height]);
-imagejpeg($im2, NULL, 20);
+imagejpeg($im2, NULL, ($_GET["part"] == "batt" ? 70 : 20));

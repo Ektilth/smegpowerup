@@ -84,9 +84,13 @@
         padding: 18px 5px;
         text-align: center;
         margin: 0px 10px;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
         margin-left: 15px;
         word-break: break-all;
+    }
+
+    .listitem .title {
+        font-size: 150%;
     }
 
     </style>
@@ -99,7 +103,7 @@
             <div style="float: right; margin: 5px 20px 0 0" id="obd2-status"></div>
             <h2 style="margin: 5px 0">Adblue Fill</h2>
         </div>
-        <div style="float: left; width:696px; border: 1px solid white">
+        <div style="float: left; width:696px;">
             <div style="margin-left: 57px;" class="bloc small lgtext" onclick="addButton(3)" id="btn-tl">+ 100 km</div>
             <div class="bloc small lgtext" onclick="addButton(2)" id="btn-tc">+ 10 km</div>
             <div class="bloc small lgtext" onclick="addButton(1)" id="btn-tr">+ 1 km</div>
@@ -110,7 +114,8 @@
 
             <div style="margin-left: 57px;" class="bloc small lgtext" onclick="switchUnit()" id="btn-unit">KM - L</div>
             <div class="bloc small lgtext" onclick="sendFill()">SEND</div>
-            <div style="margin-top: 20px;" class="listitem"><div class="titre">Fills:</div><div id="fills" class="valeur"></div></div>
+            <div style="margin-top: 20px;" class="listitem"><div class="title">Previous fills:</div><div class="valeur"></div></div>
+            <div id="fills"></div>
         </div>
     
     </body>
@@ -191,6 +196,9 @@
                         mileageValue -= 100;
                         break;
                 }
+                if(mileageValue < 0) {
+                    mileageValue = 0;
+                }
             } else {
                 switch(buttonValue) {
                     case 3:
@@ -239,7 +247,22 @@
             }, !1);
         },
 
+        getFills = function() {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function(event) {
+                if (this.readyState === 4) {
+                    if (this.status === 200) {
+                        var resp = this.responseText.toString();
+                        document.getElementById("fills").innerHTML = resp;
+                    }
+                }
+            }
+            xhr.open('GET', 'write_sd.php?type=adblue', true);
+            xhr.send();
+        }
+
         mainFunction = function() {
+            getFills();
             var fillValue = document.getElementById("fillvalue");
             var adblueValue = fillValue.innerHTML.split("km / ")[1].split("L")[0];
             fillValue.innerHTML = top.GetCar.Mileage() + "km / " + adblueValue.toFixed(2) + "L";
